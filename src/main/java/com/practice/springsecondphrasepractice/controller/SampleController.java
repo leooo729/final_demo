@@ -25,7 +25,6 @@ public class SampleController {
 
     @GetMapping("/pathVariableInvalid/{id}")
     public StatusResponse testPathVariableInvalid(@PathVariable @NotBlank  String id)  {
-
         return new StatusResponse(id);
     }
 

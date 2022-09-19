@@ -18,14 +18,14 @@ import java.util.List;
 public class BudController {
     private final BudService budService;
 
-//    @GetMapping
-//    private List<Bud> getAllBud() throws DataNotFoundException {
-//        List<Bud> allBudList = budService.getAllBud();
-//        if (allBudList.isEmpty()) {
-//            throw new DataNotFoundException("資料不存在");
-//        }
-//        return allBudList;
-//    }
+    @GetMapping
+    private List<Bud> getAllBud() throws DataNotFoundException {
+        List<Bud> allBudList = budService.getAllBud();
+        if (allBudList.isEmpty()) {
+            throw new DataNotFoundException("資料不存在");
+        }
+        return allBudList;
+    }
 
     @GetMapping("/{budYmd}")
     private Bud getBudByDate(@PathVariable @NotEmpty String budYmd) throws DataNotFoundException {

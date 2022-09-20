@@ -4,6 +4,7 @@ import com.practice.springsecondphrasepractice.controller.dto.request.CreateBudR
 import com.practice.springsecondphrasepractice.controller.dto.request.UpdateBudTypeRequest;
 import com.practice.springsecondphrasepractice.controller.dto.response.PrevAndNextYmdResponse;
 import com.practice.springsecondphrasepractice.controller.dto.response.StatusResponse;
+import com.practice.springsecondphrasepractice.exception.DataNotFoundException;
 import com.practice.springsecondphrasepractice.model.BudRepository;
 import com.practice.springsecondphrasepractice.model.entity.Bud;
 import lombok.RequiredArgsConstructor;
@@ -17,15 +18,27 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class BudService {
-
     private final BudRepository budRepository;
 
-    public List<Bud> getAllBud() {
+    public List<Bud> getBudByMethod(String startDate, String endDate, String year) throws DataNotFoundException {
+        if(startDate!=null&&endDate!=null){
+            return getFilteredWorkDayBud(startDate,endDate);
+        }
+        if(year!=null){
+            return getWorkDayBudByYear(year);
+        }
+        return getAllBud();
+    }
+
+    public List<Bud> getAllBud() throws DataNotFoundException {
         List<Bud> allBudList = budRepository.findAll();
+        if(allBudList.isEmpty()){
+            throw new DataNotFoundException("資料不存在");
+        }
         return allBudList;
     }
 
-    public Bud getBudByDate(String budYmd) {
+    public Bud getTargetBud(String budYmd) throws DataNotFoundException {
         Bud targetBud = budRepository.findByBudYmd(budYmd);
         return targetBud;
     }
@@ -56,10 +69,7 @@ public class BudService {
         budRepository.save(bud);
         return new StatusResponse("新增成功");
     }
-//    public String updateBudType(String budYmd){
-//        Bud bud=budRepository.findByBudYmd(budYmd);
-//
-//    }
+
     public PrevAndNextYmdResponse getPrevAndNextYmd(String budYmd){
         Calendar today = Calendar.getInstance(); //抓今日
 

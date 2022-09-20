@@ -12,6 +12,6 @@ import javax.validation.constraints.NotEmpty;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateBudTypeRequest {
-    @NotEmpty
+//    @NotEmpty
     private String budType;
 }

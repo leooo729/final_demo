@@ -20,6 +20,16 @@ public class ProdService {
 
     private final ProdRepository prodRepository;
 
+    public List<ProdInfoResponse>getProdByMethod(String kind,String ccy){
+        if(kind!=null){
+            return getEnableProdByKind(kind);
+        }
+        if(ccy!=null){
+            return getEnableProdByCcy(ccy);
+        }
+        return getAllProd();
+    }
+
     public List<ProdInfoResponse> getAllProd() {
         List<Prod> allProdsList = prodRepository.findAll();
         List<ProdInfoResponse> prodResponseList = changeProdResponse(allProdsList);
@@ -43,6 +53,14 @@ public class ProdService {
         ProdInfoResponse prodInfoRequest =changeProdResponse(prod);
         return prodInfoRequest;
     }
+
+//    public PrevAndNextYmdResponse getPrevAndNextWorkDayYmd(String budYmd) throws ParseException {
+//        Calendar cal = Calendar.getInstance();
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+//        cal.setTime(sdf.parse(budYmd));
+//
+//        return new PrevAndNextYmdResponse(budYmd);
+//    }
 
     public StatusResponse createProd(CreateProdRequest request) {
         Prod prod = new Prod();

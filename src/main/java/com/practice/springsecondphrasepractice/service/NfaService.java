@@ -20,9 +20,22 @@ import java.util.List;
 public class NfaService {
     private final NfaRepository nfaRepository;
 
+    public List<NfaInfoResponse> getNfaByMethod(String subject, String startDate, String endDate){
+        if(subject==null&&startDate==null&&endDate==null){
+            return getAllNfa();
+        }
+        return getFilteredNfa(subject, startDate, endDate);
+    }
+
     public List<NfaInfoResponse> getAllNfa() {
         List<Nfa> allNfaList = nfaRepository.findAll();
-        List<NfaInfoResponse> nfaInfoResponseList =changeNfaResponse(allNfaList) ;
+        List<NfaInfoResponse> nfaInfoResponseList = changeNfaResponse(allNfaList);
+        return nfaInfoResponseList;
+    }
+
+    public List<NfaInfoResponse> getFilteredNfa(String subject, String startDate, String endDate) {
+        List<Nfa> filteredNfaList = nfaRepository.getFilteredNfa(subject, startDate, endDate);
+        List<NfaInfoResponse> nfaInfoResponseList = changeNfaResponse(filteredNfaList);
         return nfaInfoResponseList;
     }
 

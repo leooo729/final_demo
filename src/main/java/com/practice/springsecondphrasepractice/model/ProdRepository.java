@@ -12,10 +12,13 @@ public interface ProdRepository extends JpaRepository<Prod, String> {
 
     Prod findByProdId(String prodId);
 
-    @Query(value = "select * where prod_enable = 'Y' and prod_kind = ?1", nativeQuery = true)
+    @Query(value = "select * from test.prod where prod_enable = 'Y'", nativeQuery = true)
+    List<Prod> getEnableProd();
+
+    @Query(value = "select * from test.prod where prod_enable = 'Y' and prod_kind = ?1", nativeQuery = true)
     List<Prod> getEnableProdByKind(String prodKind);
 
-    @Query(value = "select * where prod_enable = 'Y' and prod_ccy = ?1", nativeQuery = true)
+    @Query(value = "select * from test.prod where prod_enable = 'Y' and prod_ccy = ?1", nativeQuery = true)
     List<Prod> getEnableProdByCcy(String prodCcy);
 }
 

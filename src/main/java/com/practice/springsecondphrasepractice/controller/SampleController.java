@@ -4,6 +4,8 @@ import com.practice.springsecondphrasepractice.controller.dto.request.CreateSamp
 import com.practice.springsecondphrasepractice.controller.dto.response.StatusResponse;
 import com.practice.springsecondphrasepractice.exception.DataNotFoundException;
 import com.practice.springsecondphrasepractice.exception.ParamInvalidException;
+import com.practice.springsecondphrasepractice.service.BudService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,8 +17,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/sample")
 @Validated
+@RequiredArgsConstructor
 public class SampleController {
 
+private final BudService budService;
     @GetMapping("/{id}")
     public StatusResponse testDataNotFound(@PathVariable @NotBlank String id) throws DataNotFoundException {
 

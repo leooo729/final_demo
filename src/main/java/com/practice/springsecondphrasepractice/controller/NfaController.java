@@ -3,7 +3,6 @@ package com.practice.springsecondphrasepractice.controller;
 import com.practice.springsecondphrasepractice.controller.dto.request.CreateNfaRequest;
 import com.practice.springsecondphrasepractice.controller.dto.request.DeleteNfaRequest;
 import com.practice.springsecondphrasepractice.controller.dto.request.UpdateNfaRequest;
-import com.practice.springsecondphrasepractice.controller.dto.request.UpdateProdRequest;
 import com.practice.springsecondphrasepractice.controller.dto.response.NfaInfoResponse;
 import com.practice.springsecondphrasepractice.controller.dto.response.StatusResponse;
 import com.practice.springsecondphrasepractice.service.NfaService;
@@ -15,13 +14,14 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/nfa")
 @RequiredArgsConstructor
+//@Validated
 public class NfaController {
     private final NfaService nfaService;
 
     @GetMapping
-    private List<NfaInfoResponse> getAllNfa(){
-        List<NfaInfoResponse> nfaInfoResponseList=nfaService.getAllNfa();
-        return  nfaInfoResponseList;
+    private List<NfaInfoResponse> getNfaByMethod(@RequestParam(required = false) String subject,@RequestParam(required = false) String startDate,@RequestParam(required = false) String endDate){
+        List<NfaInfoResponse> nfaInfoResponseList=nfaService.getNfaByMethod(subject, startDate, endDate);
+        return nfaInfoResponseList;
     }
 
     @PostMapping
@@ -39,5 +39,10 @@ public class NfaController {
         StatusResponse response = nfaService.deleteNfa(nfaUuid,deleteNfaRequest);
         return response;
     }
-
 }
+
+//    @GetMapping
+//    private List<NfaInfoResponse> getAllNfa(){
+//        List<NfaInfoResponse> nfaInfoResponseList=nfaService.getAllNfa();
+//        return  nfaInfoResponseList;
+//    }

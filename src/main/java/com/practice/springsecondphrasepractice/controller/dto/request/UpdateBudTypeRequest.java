@@ -15,6 +15,6 @@ import javax.validation.constraints.Pattern;
 @NoArgsConstructor
 public class UpdateBudTypeRequest {
     @NotNull
-    @Pattern(regexp = "[YN]",message = "格式錯誤")
+    @Pattern(regexp = "(Y|N)",message = "格式錯誤")
     private String budType;
 }

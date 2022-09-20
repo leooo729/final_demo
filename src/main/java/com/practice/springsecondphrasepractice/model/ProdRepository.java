@@ -12,6 +12,8 @@ import java.util.Map;
 public interface ProdRepository extends JpaRepository<Prod, String> {
 
     Prod findByProdId(String prodId);
+    List<Prod> findByProdKind(String prodKind);
+    List<Prod> findByProdCcy(String prodCcy);
 
     @Query(value = "select * from test.prod order where prod_enable = 'Y'", nativeQuery = true)
     List<Prod> getEnableProd();
@@ -21,6 +23,7 @@ public interface ProdRepository extends JpaRepository<Prod, String> {
 
     @Query(value = "select * from test.prod where prod_enable = 'Y' and prod_ccy = ?1", nativeQuery = true)
     List<Prod> getEnableProdByCcy(String prodCcy);
+
 }
 
 // List<Map<String, ProdInfoResponse>>

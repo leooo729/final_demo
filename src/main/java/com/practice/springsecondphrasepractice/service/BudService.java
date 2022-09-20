@@ -25,7 +25,7 @@ public class BudService {
     @Autowired
     private BudRepository budRepository;
 
-    public List<Bud> getBudByMethod(String startDate, String endDate, String year) throws DataNotFoundException, ParamInvalidException {
+    public List<Bud> getBudByMethod(String startDate, String endDate, String year){
         if (startDate != null && endDate != null) {
 
 
@@ -39,11 +39,8 @@ public class BudService {
         return getAllBud();
     }
 
-    public List<Bud> getAllBud() throws DataNotFoundException {
+    public List<Bud> getAllBud() {
         List<Bud> allBudList = budRepository.findAll();
-//        if(allBudList.isEmpty()){
-//            throw new DataNotFoundException("資料不存在");
-//        }
         return allBudList;
     }
 
@@ -70,13 +67,8 @@ public class BudService {
         return filterBudList;
     }
 
-    public StatusResponse createBud(CreateBudRequest createBudRequest) throws ParamInvalidException {
+    public StatusResponse createBud(CreateBudRequest createBudRequest) {
 
-        if (budRepository.findByBudYmd(createBudRequest.getBudYmd())!=null){
-            List<String> errMessageList = new ArrayList<>();
-            errMessageList.add("資料已存在");
-            throw new ParamInvalidException(errMessageList);
-        }
         Bud bud = new Bud();
         bud.setBudYmd(createBudRequest.getBudYmd());
         bud.setBudType(createBudRequest.getBudType());
@@ -100,13 +92,7 @@ public class BudService {
 //        return new PrevAndNextYmdResponse();
 //    }
 
-    public StatusResponse updateBudType(String budYmd, UpdateBudTypeRequest updateBudTypeRequest) throws ParamInvalidException {
-
-        if (budRepository.findByBudYmd(budYmd)==null){
-            List<String> errMessageList = new ArrayList<>();
-            errMessageList.add("資料不存在");
-            throw new ParamInvalidException(errMessageList);
-        }
+    public StatusResponse updateBudType(String budYmd, UpdateBudTypeRequest updateBudTypeRequest) {
 
         Bud bud = budRepository.findByBudYmd(budYmd);
         bud.setBudType(updateBudTypeRequest.getBudType());

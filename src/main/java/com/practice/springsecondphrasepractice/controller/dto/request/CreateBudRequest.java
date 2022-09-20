@@ -17,9 +17,9 @@ import javax.validation.constraints.Pattern;
 @NoArgsConstructor
 public class CreateBudRequest {
     @NotNull
-    @Length(min = 8,max = 8,message = "格式錯誤")
+    @Pattern(regexp = "[0-9]{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])",message = "格式錯誤")
     private String budYmd;
     @NotNull
-    @Pattern(regexp = "[YN]",message = "格式錯誤")
+    @Pattern(regexp = "(Y|N)",message = "格式錯誤")
     private String budType;
 }

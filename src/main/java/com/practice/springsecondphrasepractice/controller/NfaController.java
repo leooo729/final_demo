@@ -19,23 +19,23 @@ public class NfaController {
     private final NfaService nfaService;
 
     @GetMapping
-    private List<NfaInfoResponse> getNfaByMethod(@RequestParam(required = false) String subject,@RequestParam(required = false) String startDate,@RequestParam(required = false) String endDate){
+    public List<NfaInfoResponse> getNfaByMethod(@RequestParam(required = false) String subject,@RequestParam(required = false) String startDate,@RequestParam(required = false) String endDate){
         List<NfaInfoResponse> nfaInfoResponseList=nfaService.getNfaByMethod(subject, startDate, endDate);
         return nfaInfoResponseList;
     }
 
     @PostMapping
-    private StatusResponse createNfa(@RequestBody CreateNfaRequest createNfaRequest) {
+    public StatusResponse createNfa(@RequestBody CreateNfaRequest createNfaRequest) {
         StatusResponse response = nfaService.createNfa(createNfaRequest);
         return response;
     }
     @PutMapping("/{nfaUuid}")
-    private StatusResponse updateNfa(@PathVariable String nfaUuid, @RequestBody UpdateNfaRequest updateNfaRequest){
+    public StatusResponse updateNfa(@PathVariable String nfaUuid, @RequestBody UpdateNfaRequest updateNfaRequest){
         StatusResponse response=nfaService.updateNfa(nfaUuid,updateNfaRequest);
         return response;
     }
     @PostMapping("/{nfaUuid}")
-    private StatusResponse deleteNfa(@PathVariable String nfaUuid,@RequestBody DeleteNfaRequest deleteNfaRequest) {
+    public StatusResponse deleteNfa(@PathVariable String nfaUuid,@RequestBody DeleteNfaRequest deleteNfaRequest) {
         StatusResponse response = nfaService.deleteNfa(nfaUuid,deleteNfaRequest);
         return response;
     }

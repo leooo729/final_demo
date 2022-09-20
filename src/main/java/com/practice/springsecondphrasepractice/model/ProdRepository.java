@@ -4,15 +4,16 @@ import com.practice.springsecondphrasepractice.controller.dto.response.ProdInfoR
 import com.practice.springsecondphrasepractice.model.entity.Prod;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
-
+@Repository
 public interface ProdRepository extends JpaRepository<Prod, String> {
 
     Prod findByProdId(String prodId);
 
-    @Query(value = "select * from test.prod where prod_enable = 'Y'", nativeQuery = true)
+    @Query(value = "select * from test.prod order where prod_enable = 'Y'", nativeQuery = true)
     List<Prod> getEnableProd();
 
     @Query(value = "select * from test.prod where prod_enable = 'Y' and prod_kind = ?1", nativeQuery = true)

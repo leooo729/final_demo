@@ -26,7 +26,7 @@ public class ApplicationExceptionHandler {
     public ResponseEntity<ErrorResponse> handleParamInvalid(
             ParamInvalidException ex
     ) {
-        ErrorResponse errorResponse = new ErrorResponse(ActionError.VALIDATE.getMsg(), ex.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse(ActionError.VALIDATE.getMsg(), "");
 
         for (String errMsg : ex.getErrMessages()) {
             errorResponse.addCheckError(errMsg);

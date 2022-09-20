@@ -18,32 +18,32 @@ public class ProdController {
 
     private final ProdService prodService;
     @GetMapping
-    private List<ProdInfoResponse> getProdByMethod(@RequestParam(required = false) String kind,
+    public List<ProdInfoResponse> getProdByMethod(@RequestParam(required = false) String kind,
                                                    @RequestParam(required = false) String ccy){
         List<ProdInfoResponse>prodInfoResponseList=prodService.getProdByMethod(kind,ccy);
         return prodInfoResponseList;
     }
 
     @GetMapping("/{prodId}")
-    private ProdInfoResponse getTargetProd(@PathVariable String prodId) {
+    public ProdInfoResponse getTargetProd(@PathVariable String prodId) {
         ProdInfoResponse prodInfoRequest = prodService.getTargetProd(prodId);
         return prodInfoRequest;
     }
 
     @PostMapping
-    private StatusResponse createNewProd(@RequestBody CreateProdRequest createProdRequest) {
+    public StatusResponse createNewProd(@RequestBody CreateProdRequest createProdRequest) {
         StatusResponse response = prodService.createProd(createProdRequest);
         return response;
     }
 
     @PutMapping("/{prodId}")
-    private StatusResponse updateProdById(@PathVariable String prodId, @RequestBody UpdateProdRequest updateProdRequest) {
+    public StatusResponse updateProdById(@PathVariable String prodId, @RequestBody UpdateProdRequest updateProdRequest) {
         StatusResponse response = prodService.updateProdById(prodId, updateProdRequest);
         return response;
     }
 
     @PostMapping("/{prodId}")
-    private StatusResponse deleteProdById(@PathVariable String prodId, @RequestBody DeleteProdRequest deleteProdRequest) {
+    public StatusResponse deleteProdById(@PathVariable String prodId, @RequestBody DeleteProdRequest deleteProdRequest) {
         StatusResponse response = prodService.deleteProdById(prodId, deleteProdRequest);
         return response;
     }

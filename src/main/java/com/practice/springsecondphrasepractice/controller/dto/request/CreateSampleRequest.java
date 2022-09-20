@@ -15,7 +15,6 @@ import javax.validation.constraints.NotNull;
 public class CreateSampleRequest {
     @NotEmpty
     private String name;
-
     @NotNull
     private Integer count;
 }

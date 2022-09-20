@@ -3,11 +3,14 @@ package com.practice.springsecondphrasepractice.service;
 import com.practice.springsecondphrasepractice.controller.dto.request.CreateBudRequest;
 import com.practice.springsecondphrasepractice.controller.dto.request.UpdateBudTypeRequest;
 import com.practice.springsecondphrasepractice.controller.dto.response.PrevAndNextYmdResponse;
+import com.practice.springsecondphrasepractice.controller.dto.response.ProdInfoResponse;
 import com.practice.springsecondphrasepractice.controller.dto.response.StatusResponse;
 import com.practice.springsecondphrasepractice.exception.DataNotFoundException;
+import com.practice.springsecondphrasepractice.exception.ParamInvalidException;
 import com.practice.springsecondphrasepractice.model.BudRepository;
 import com.practice.springsecondphrasepractice.model.entity.Bud;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -16,25 +19,31 @@ import java.util.Calendar;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class BudService {
-    private final BudRepository budRepository;
+    //private final BudRepository budRepository;
+    @Autowired
+    private BudRepository budRepository;
 
-    public List<Bud> getBudByMethod(String startDate, String endDate, String year) throws DataNotFoundException {
-        if(startDate!=null&&endDate!=null){
-            return getFilteredWorkDayBud(startDate,endDate);
+    public List<Bud> getBudByMethod(String startDate, String endDate, String year) throws DataNotFoundException, ParamInvalidException {
+        if (startDate != null && endDate != null) {
+
+
+            return getFilteredWorkDayBud(startDate, endDate);
         }
-        if(year!=null){
+
+        if (year != null) {
             return getWorkDayBudByYear(year);
         }
+
         return getAllBud();
     }
 
     public List<Bud> getAllBud() throws DataNotFoundException {
         List<Bud> allBudList = budRepository.findAll();
-        if(allBudList.isEmpty()){
-            throw new DataNotFoundException("資料不存在");
-        }
+//        if(allBudList.isEmpty()){
+//            throw new DataNotFoundException("資料不存在");
+//        }
         return allBudList;
     }
 
@@ -61,7 +70,13 @@ public class BudService {
         return filterBudList;
     }
 
-    public StatusResponse createBud(CreateBudRequest createBudRequest) {
+    public StatusResponse createBud(CreateBudRequest createBudRequest) throws ParamInvalidException {
+
+        if (budRepository.findByBudYmd(createBudRequest.getBudYmd())!=null){
+            List<String> errMessageList = new ArrayList<>();
+            errMessageList.add("資料已存在");
+            throw new ParamInvalidException(errMessageList);
+        }
         Bud bud = new Bud();
         bud.setBudYmd(createBudRequest.getBudYmd());
         bud.setBudType(createBudRequest.getBudType());
@@ -70,15 +85,31 @@ public class BudService {
         return new StatusResponse("新增成功");
     }
 
-    public PrevAndNextYmdResponse getPrevAndNextYmd(String budYmd){
-        Calendar today = Calendar.getInstance(); //抓今日
+//    public PrevAndNextYmdResponse getPrevAndNextYmd(String budYmd) {
+//        PrevAndNextYmdResponse response = new PrevAndNextYmdResponse();
+//        List<Bud> workDayBudList = budRepository.getWorkDayBud();
+//        for (Bud bud : workDayBudList) {
+//
+//            if (budYmd == bud.getBudYmd()) {
+//                response.setBudYmd();
+//                response.setBudPrevYmd();
+//            }
+//            prev
+//        }
+//
+//        return new PrevAndNextYmdResponse();
+//    }
 
-        return new PrevAndNextYmdResponse();
-    }
+    public StatusResponse updateBudType(String budYmd, UpdateBudTypeRequest updateBudTypeRequest) throws ParamInvalidException {
 
-    public StatusResponse updateBudType(String budYmd, UpdateBudTypeRequest request){
-        Bud bud=budRepository.findByBudYmd(budYmd);
-        bud.setBudType(request.getBudType());
+        if (budRepository.findByBudYmd(budYmd)==null){
+            List<String> errMessageList = new ArrayList<>();
+            errMessageList.add("資料不存在");
+            throw new ParamInvalidException(errMessageList);
+        }
+
+        Bud bud = budRepository.findByBudYmd(budYmd);
+        bud.setBudType(updateBudTypeRequest.getBudType());
         bud.setBudUTime(LocalDateTime.now());
         budRepository.save(bud);
         return new StatusResponse("異動成功");

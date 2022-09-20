@@ -4,6 +4,7 @@ import com.practice.springsecondphrasepractice.controller.dto.request.CreateSamp
 import com.practice.springsecondphrasepractice.controller.dto.response.StatusResponse;
 import com.practice.springsecondphrasepractice.exception.DataNotFoundException;
 import com.practice.springsecondphrasepractice.exception.ParamInvalidException;
+import com.practice.springsecondphrasepractice.model.entity.Bud;
 import com.practice.springsecondphrasepractice.service.BudService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -24,6 +25,7 @@ private final BudService budService;
     @GetMapping("/{id}")
     public StatusResponse testDataNotFound(@PathVariable @NotBlank String id) throws DataNotFoundException {
 
+        List<Bud>a=budService.getAllBud();
        throw new DataNotFoundException("資料不存在");
     }
 

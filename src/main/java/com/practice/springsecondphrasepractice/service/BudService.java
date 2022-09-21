@@ -80,13 +80,14 @@ public class BudService {
 //    public PrevAndNextYmdResponse getPrevAndNextYmd(String budYmd) {
 //        PrevAndNextYmdResponse response = new PrevAndNextYmdResponse();
 //        List<Bud> workDayBudList = budRepository.getWorkDayBud();
+//
+//        while ()
 //        for (Bud bud : workDayBudList) {
 //
 //            if (budYmd == bud.getBudYmd()) {
 //                response.setBudYmd();
 //                response.setBudPrevYmd();
 //            }
-//            prev
 //        }
 //
 //        return new PrevAndNextYmdResponse();

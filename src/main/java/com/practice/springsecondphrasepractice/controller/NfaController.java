@@ -1,14 +1,18 @@
 package com.practice.springsecondphrasepractice.controller;
 
-import com.practice.springsecondphrasepractice.controller.dto.request.CreateNfaRequest;
+import com.practice.springsecondphrasepractice.controller.dto.request.CreateAndUpdateNfaRequest;
 import com.practice.springsecondphrasepractice.controller.dto.request.DeleteNfaRequest;
-import com.practice.springsecondphrasepractice.controller.dto.request.UpdateNfaRequest;
 import com.practice.springsecondphrasepractice.controller.dto.response.NfaInfoResponse;
 import com.practice.springsecondphrasepractice.controller.dto.response.StatusResponse;
+import com.practice.springsecondphrasepractice.exception.DataNotFoundException;
+import com.practice.springsecondphrasepractice.exception.ParamInvalidException;
 import com.practice.springsecondphrasepractice.service.NfaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Pattern;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -19,30 +23,39 @@ public class NfaController {
     private final NfaService nfaService;
 
     @GetMapping
-    public List<NfaInfoResponse> getNfaByMethod(@RequestParam(required = false) String subject,@RequestParam(required = false) String startDate,@RequestParam(required = false) String endDate){
+    public List<NfaInfoResponse> getNfaByMethod(@RequestParam(required = false)String subject,
+                                                @RequestParam(required = false)@Pattern(regexp = "[0-9]{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])", message = "格式錯誤") String startDate,
+                                                @RequestParam(required = false)@Pattern(regexp = "[0-9]{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])", message = "格式錯誤") String endDate) throws DataNotFoundException {
         List<NfaInfoResponse> nfaInfoResponseList=nfaService.getNfaByMethod(subject, startDate, endDate);
+        if(nfaInfoResponseList.isEmpty()){
+            throw new DataNotFoundException("資料不存在");
+        }
         return nfaInfoResponseList;
     }
 
     @PostMapping
-    public StatusResponse createNfa(@RequestBody CreateNfaRequest createNfaRequest) {
-        StatusResponse response = nfaService.createNfa(createNfaRequest);
+    public StatusResponse createNfa(@RequestBody @Valid CreateAndUpdateNfaRequest request) throws ParamInvalidException {
+        if (request.getStartDate().compareTo(request.getEndDate()) > 0) {
+            List<String> errMessageList = new ArrayList<>();
+            errMessageList.add("起始日期 不能大於 結束日期");
+            throw new ParamInvalidException(errMessageList);
+        }
+        StatusResponse response = nfaService.createNfa(request);
         return response;
     }
     @PutMapping("/{nfaUuid}")
-    public StatusResponse updateNfa(@PathVariable String nfaUuid, @RequestBody UpdateNfaRequest updateNfaRequest){
-        StatusResponse response=nfaService.updateNfa(nfaUuid,updateNfaRequest);
+    public StatusResponse updateNfa(@PathVariable String nfaUuid, @RequestBody @Valid CreateAndUpdateNfaRequest request) throws ParamInvalidException {
+        if (request.getStartDate().compareTo(request.getEndDate()) > 0) {
+            List<String> errMessageList = new ArrayList<>();
+            errMessageList.add("起始日期 不能大於 結束日期");
+            throw new ParamInvalidException(errMessageList);
+        }
+        StatusResponse response=nfaService.updateNfa(nfaUuid,request);
         return response;
     }
     @PostMapping("/{nfaUuid}")
-    public StatusResponse deleteNfa(@PathVariable String nfaUuid,@RequestBody DeleteNfaRequest deleteNfaRequest) {
+    public StatusResponse deleteNfa(@PathVariable String nfaUuid,@RequestBody@Valid DeleteNfaRequest deleteNfaRequest) {
         StatusResponse response = nfaService.deleteNfa(nfaUuid,deleteNfaRequest);
         return response;
     }
 }
-
-//    @GetMapping
-//    private List<NfaInfoResponse> getAllNfa(){
-//        List<NfaInfoResponse> nfaInfoResponseList=nfaService.getAllNfa();
-//        return  nfaInfoResponseList;
-//    }

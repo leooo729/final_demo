@@ -31,14 +31,15 @@ public class BudController {
     @GetMapping
     public List<Bud> getBudByMethod(@RequestParam(required = false) @Pattern(regexp = "[0-9]{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])", message = "起始日期 格式錯誤") String startDate,
                                     @RequestParam(required = false) @Pattern(regexp = "[0-9]{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])", message = "結束日期 格式錯誤") String endDate,
-                                    @RequestParam(required = false) @Pattern(regexp ="\\d{4}", message = "年度 格式錯誤") String year) throws DataNotFoundException, ParamInvalidException {
-
-        if (startDate!=null&&endDate!=null&&startDate.compareTo(endDate) > 0) {
+                                    @RequestParam(required = false) @Pattern(regexp = "\\d{4}", message = "年度 格式錯誤") String year) throws DataNotFoundException, ParamInvalidException {
+        if (startDate != null && endDate != null && startDate.compareTo(endDate) > 0) {
             List<String> errMessageList = new ArrayList<>();
             errMessageList.add("起始日期 不能大於 結束日期");
             throw new ParamInvalidException(errMessageList);
         }
-        List<Bud> budList = budService.getBudByMethod(startDate, endDate, year);
+
+        List<Bud> budList;
+        budList = budService.getBudByMethod(startDate, endDate, year);
         if (budList.isEmpty()) {
             throw new DataNotFoundException("資料不存在");
         }
@@ -47,7 +48,7 @@ public class BudController {
 
     @GetMapping("/{budYmd}")
     public Bud getTargetBud(@PathVariable(required = false) @Pattern(regexp = "[0-9]{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])", message = "日期 格式錯誤") String budYmd) throws DataNotFoundException {
-        if(budRepository.findByBudYmd(budYmd)==null){
+        if (budRepository.findByBudYmd(budYmd) == null) {
             throw new DataNotFoundException("資料不存在");
         }
         Bud targetBud = budService.getTargetBud(budYmd);
@@ -57,7 +58,7 @@ public class BudController {
     @PostMapping
     public StatusResponse createBud(@RequestBody @Valid CreateBudRequest createBudRequest) throws ParamInvalidException {
 
-        if (budRepository.findByBudYmd(createBudRequest.getBudYmd())!=null){
+        if (budRepository.findByBudYmd(createBudRequest.getBudYmd()) != null) {
             List<String> errMessageList = new ArrayList<>();
             errMessageList.add("資料已存在");
             throw new ParamInvalidException(errMessageList);
@@ -66,9 +67,10 @@ public class BudController {
         StatusResponse response = budService.createBud(createBudRequest);
         return response;
     }
+
     @GetMapping("/business/{budYmd}")
-    public PrevAndNextYmdResponse getPrevAndNextYmd(@PathVariable @Pattern(regexp = "[0-9]{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])", message = "日期 格式錯誤")String budYmd) throws DataNotFoundException {
-        if(budRepository.findByBudYmd(budYmd)==null){
+    public PrevAndNextYmdResponse getPrevAndNextYmd(@PathVariable @Pattern(regexp = "[0-9]{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])", message = "日期 格式錯誤") String budYmd) throws DataNotFoundException {
+        if (budRepository.findByBudYmd(budYmd) == null) {
             throw new DataNotFoundException("資料不存在");
         }
         PrevAndNextYmdResponse response = budService.getPrevAndNextYmd(budYmd);
@@ -76,9 +78,9 @@ public class BudController {
     }
 
     @PutMapping("/{budYmd}")
-    public StatusResponse updateBudType(@PathVariable @Pattern(regexp = "[0-9]{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])", message = "日期 格式錯誤")String budYmd, @RequestBody @Valid UpdateBudTypeRequest updateBudTypeRequest) throws ParamInvalidException {
+    public StatusResponse updateBudType(@PathVariable @Pattern(regexp = "[0-9]{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])", message = "日期 格式錯誤") String budYmd, @RequestBody @Valid UpdateBudTypeRequest updateBudTypeRequest) throws ParamInvalidException {
 
-        if (budRepository.findByBudYmd(budYmd)==null){
+        if (budRepository.findByBudYmd(budYmd) == null) {
             List<String> errMessageList = new ArrayList<>();
             errMessageList.add("資料不存在");
             throw new ParamInvalidException(errMessageList);

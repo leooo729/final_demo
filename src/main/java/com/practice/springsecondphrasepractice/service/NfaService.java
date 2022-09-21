@@ -41,21 +41,6 @@ public class NfaService {
 
         return nfaInfoResponseList;
     }
-
-//    public List<NfaInfoResponse> getFilteredNfa(String subject, String startDate, String endDate) {
-//        List<Nfa> filteredNfaList;
-//        if (!subject.isEmpty() && !startDate.isEmpty() && !endDate.isEmpty()) {
-//            filteredNfaList = nfaRepository.getAllFilteredNfa(subject, startDate, endDate);
-//        } else if (!subject.isEmpty() && startDate.isEmpty() && endDate.isEmpty()) {
-//            filteredNfaList = nfaRepository.getSubjectFilteredNfa(subject);
-//        } else {
-//            filteredNfaList = nfaRepository.getDateFilteredNfa(startDate, endDate);
-//        }
-//
-//        List<NfaInfoResponse> nfaInfoResponseList = changeNfaResponse(filteredNfaList);
-//        return nfaInfoResponseList;
-//    }
-
     public StatusResponse createNfa(CreateAndUpdateNfaRequest request) {
         Nfa nfa = new Nfa();
         nfa.setNfaUuid(DateTimeFormatter.ofPattern("yyyyMMddhhmmssSSS").format(LocalDateTime.now()));

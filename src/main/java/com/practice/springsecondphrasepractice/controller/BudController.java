@@ -2,6 +2,7 @@ package com.practice.springsecondphrasepractice.controller;
 
 import com.practice.springsecondphrasepractice.controller.dto.request.CreateBudRequest;
 import com.practice.springsecondphrasepractice.controller.dto.request.UpdateBudTypeRequest;
+import com.practice.springsecondphrasepractice.controller.dto.response.PrevAndNextYmdResponse;
 import com.practice.springsecondphrasepractice.controller.dto.response.StatusResponse;
 import com.practice.springsecondphrasepractice.exception.DataNotFoundException;
 import com.practice.springsecondphrasepractice.exception.ParamInvalidException;
@@ -46,10 +47,10 @@ public class BudController {
 
     @GetMapping("/{budYmd}")
     public Bud getTargetBud(@PathVariable(required = false) @Pattern(regexp = "[0-9]{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])", message = "日期 格式錯誤") String budYmd) throws DataNotFoundException {
-        Bud targetBud = budService.getTargetBud(budYmd);
-        if (targetBud == null) {
+        if(budRepository.findByBudYmd(budYmd)==null){
             throw new DataNotFoundException("資料不存在");
         }
+        Bud targetBud = budService.getTargetBud(budYmd);
         return targetBud;
     }
 
@@ -65,11 +66,14 @@ public class BudController {
         StatusResponse response = budService.createBud(createBudRequest);
         return response;
     }
-//    @GetMapping("/business/{budYmd}")
-//    private List<Bud> getWorkDayBudByYear(@RequestParam String year){
-//        List<Bud> filteredBudList = budService.getWorkDayBudByYear(year);
-//        return filteredBudList;
-//    }
+    @GetMapping("/business/{budYmd}")
+    public PrevAndNextYmdResponse getPrevAndNextYmd(@PathVariable @Pattern(regexp = "[0-9]{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])", message = "日期 格式錯誤")String budYmd) throws DataNotFoundException {
+        if(budRepository.findByBudYmd(budYmd)==null){
+            throw new DataNotFoundException("資料不存在");
+        }
+        PrevAndNextYmdResponse response = budService.getPrevAndNextYmd(budYmd);
+        return response;
+    }
 
     @PutMapping("/{budYmd}")
     public StatusResponse updateBudType(@PathVariable @Pattern(regexp = "[0-9]{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])", message = "日期 格式錯誤")String budYmd, @RequestBody @Valid UpdateBudTypeRequest updateBudTypeRequest) throws ParamInvalidException {

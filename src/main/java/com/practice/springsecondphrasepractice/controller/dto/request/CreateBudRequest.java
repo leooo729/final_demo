@@ -16,10 +16,10 @@ import javax.validation.constraints.Pattern;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateBudRequest {
-    @NotNull
-    @Pattern(regexp = "[0-9]{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])",message = "格式錯誤")
+    @NotEmpty
+    @Pattern(regexp = "^$|[0-9]{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])",message = "格式錯誤")
     private String budYmd;
-    @NotNull
-    @Pattern(regexp = "(Y|N)",message = "格式錯誤")
+    @NotEmpty
+    @Pattern(regexp = "^$|(Y|N)",message = "格式錯誤")
     private String budType;
 }

@@ -3,39 +3,29 @@ package com.practice.springsecondphrasepractice.service;
 import com.practice.springsecondphrasepractice.controller.dto.request.CreateBudRequest;
 import com.practice.springsecondphrasepractice.controller.dto.request.UpdateBudTypeRequest;
 import com.practice.springsecondphrasepractice.controller.dto.response.PrevAndNextYmdResponse;
-import com.practice.springsecondphrasepractice.controller.dto.response.ProdInfoResponse;
 import com.practice.springsecondphrasepractice.controller.dto.response.StatusResponse;
 import com.practice.springsecondphrasepractice.exception.DataNotFoundException;
-import com.practice.springsecondphrasepractice.exception.ParamInvalidException;
 import com.practice.springsecondphrasepractice.model.BudRepository;
 import com.practice.springsecondphrasepractice.model.entity.Bud;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 @Service
-//@RequiredArgsConstructor
+@RequiredArgsConstructor
 public class BudService {
-    //private final BudRepository budRepository;
-    @Autowired
-    private BudRepository budRepository;
+    private final BudRepository budRepository;
 
     public List<Bud> getBudByMethod(String startDate, String endDate, String year){
         if (startDate != null && endDate != null) {
-
-
             return getFilteredWorkDayBud(startDate, endDate);
         }
-
         if (year != null) {
             return getWorkDayBudByYear(year);
         }
-
         return getAllBud();
     }
 
@@ -77,21 +67,13 @@ public class BudService {
         return new StatusResponse("新增成功");
     }
 
-//    public PrevAndNextYmdResponse getPrevAndNextYmd(String budYmd) {
-//        PrevAndNextYmdResponse response = new PrevAndNextYmdResponse();
-//        List<Bud> workDayBudList = budRepository.getWorkDayBud();
-//
-//        while ()
-//        for (Bud bud : workDayBudList) {
-//
-//            if (budYmd == bud.getBudYmd()) {
-//                response.setBudYmd();
-//                response.setBudPrevYmd();
-//            }
-//        }
-//
-//        return new PrevAndNextYmdResponse();
-//    }
+    public PrevAndNextYmdResponse getPrevAndNextYmd(String budYmd) {
+        PrevAndNextYmdResponse response = new PrevAndNextYmdResponse();
+        response.setBudYmd(budYmd);
+        response.setBudPrevYmd(budRepository.getPrevWorkDayBud(budYmd)!=null?budRepository.getPrevWorkDayBud(budYmd):"查無資料");
+        response.setBudNextYmd(budRepository.getNextWorkDayBud(budYmd)!=null?budRepository.getNextWorkDayBud(budYmd):"查無資料");
+        return response;
+    }
 
     public StatusResponse updateBudType(String budYmd, UpdateBudTypeRequest updateBudTypeRequest) {
 

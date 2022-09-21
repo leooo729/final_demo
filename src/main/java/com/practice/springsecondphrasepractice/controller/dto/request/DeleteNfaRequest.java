@@ -5,10 +5,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class DeleteNfaRequest {
+    @NotEmpty
+    @Pattern(regexp = "^$|N",message = "格式錯誤")
     private String enable;
 }

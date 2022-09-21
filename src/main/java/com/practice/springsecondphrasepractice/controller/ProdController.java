@@ -31,7 +31,7 @@ public class ProdController {
     private final ProdRepository prodRepository;
 
     @GetMapping
-    public List<ProdInfoResponse> getProdByMethod(@RequestParam(required = false) @Pattern(regexp = "[A-Z]{3}", message = "類別 格式錯誤") String kind,
+    public List<ProdInfoResponse> getProdByMethod(@RequestParam(required = false) @Pattern(regexp = "[A-Z]{3}", message = "類別 格式錯誤")  String kind,//@Pattern(regexp = "(USE|EAT)",message = "類別不存在")
                                                   @RequestParam(required = false) @Pattern(regexp = "[A-Z]{3}", message = "幣別 格式錯誤") String ccy) throws DataNotFoundException, ParamInvalidException {
 
         if (kind != null && prodRepository.findByProdKind(kind) == null) {
@@ -60,13 +60,16 @@ public class ProdController {
         ProdInfoResponse prodInfoResponse = prodService.getTargetProd(prodId);
         return prodInfoResponse;
     }
-
     @PostMapping
     public StatusResponse createNewProd(@RequestBody @Valid CreateProdRequest createProdRequest) {
+//        if(prodRepository.findByProdId(createProdRequest.getProdKind()+"_"+createProdRequest.getProdCcy())!=null){
+//            List<String> errMessageList = new ArrayList<>();
+//            errMessageList.add("資料已存在");
+//            throw new ParamInvalidException(errMessageList);
+//        }
         StatusResponse response = prodService.createProd(createProdRequest);
         return response;
     }
-
     @PutMapping("/{prodId}")
     public StatusResponse updateProdById(@PathVariable @Pattern(regexp = "(EAT|USE)_[A-Z]{3}", message = "prodId 格式錯誤") String prodId, @RequestBody @Valid UpdateProdRequest updateProdRequest) throws ParamInvalidException {
         if (prodRepository.findByProdId(prodId) == null) {
@@ -78,8 +81,9 @@ public class ProdController {
         return response;
     }
 
+
     @PostMapping("/{prodId}")
-    public StatusResponse deleteProdById(@PathVariable  @Pattern(regexp = "(EAT|USE)_[A-Z]{3}", message = "prodId 格式錯誤")String prodId, @RequestBody @Valid DeleteProdRequest deleteProdRequest) throws DataNotFoundException, ParamInvalidException {
+    public StatusResponse deleteProdById(@PathVariable  @Pattern(regexp = "(EAT|USE)_[A-Z]{3}", message = "prodId 格式錯誤")String prodId, @RequestBody @Valid DeleteProdRequest deleteProdRequest) throws  ParamInvalidException {
         if (prodRepository.findByProdId(prodId) == null) {
             List<String> errMessageList = new ArrayList<>();
             errMessageList.add("資料不存在");

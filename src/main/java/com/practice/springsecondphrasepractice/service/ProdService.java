@@ -54,14 +54,6 @@ public class ProdService {
         return prodInfoRequest;
     }
 
-//    public PrevAndNextYmdResponse getPrevAndNextWorkDayYmd(String budYmd) throws ParseException {
-//        Calendar cal = Calendar.getInstance();
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-//        cal.setTime(sdf.parse(budYmd));
-//
-//        return new PrevAndNextYmdResponse(budYmd);
-//    }
-
     public StatusResponse createProd(CreateProdRequest request) {
         Prod prod = new Prod();
         prod.setProdId(request.getProdKind() + "_" + request.getProdCcy());

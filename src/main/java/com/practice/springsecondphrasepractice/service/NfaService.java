@@ -1,7 +1,7 @@
 package com.practice.springsecondphrasepractice.service;
 
-import com.practice.springsecondphrasepractice.controller.dto.request.DeleteNfaRequest;
 import com.practice.springsecondphrasepractice.controller.dto.request.CreateAndUpdateNfaRequest;
+import com.practice.springsecondphrasepractice.controller.dto.request.DeleteNfaRequest;
 import com.practice.springsecondphrasepractice.controller.dto.response.NfaInfoResponse;
 import com.practice.springsecondphrasepractice.controller.dto.response.StatusResponse;
 import com.practice.springsecondphrasepractice.model.NfaRepository;
@@ -13,18 +13,12 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class NfaService {
     private final NfaRepository nfaRepository;
-
-    public List<NfaInfoResponse> getNfaByMethod(String subject, String startDate, String endDate) {
-        if (subject.isEmpty() && startDate.isEmpty() && endDate.isEmpty()) {
-            return getAllNfa();
-        }
-        return getFilteredNfa(subject, startDate, endDate);
-    }
 
     public List<NfaInfoResponse> getAllNfa() {
         List<Nfa> allNfaList = nfaRepository.findAll();
@@ -32,19 +26,35 @@ public class NfaService {
         return nfaInfoResponseList;
     }
 
-    public List<NfaInfoResponse> getFilteredNfa(String subject, String startDate, String endDate) {
-        List<Nfa> filteredNfaList;
-        if (!subject.isEmpty() && !startDate.isEmpty() && !endDate.isEmpty()) {
-            filteredNfaList = nfaRepository.getAllFilteredNfa(subject, startDate, endDate);
-        } else if (!subject.isEmpty() && startDate.isEmpty() && endDate.isEmpty()) {
-            filteredNfaList = nfaRepository.getSubjectFilteredNfa(subject);
-        } else {
-            filteredNfaList = nfaRepository.getDateFilteredNfa(startDate, endDate);
+    public List<NfaInfoResponse> getFilteredNfaList(String subject, String startDate, String endDate) {
+        List<Nfa> filteredNfaList = nfaRepository.getEnabledNfa();
+        if (!subject.isEmpty()) {
+            filteredNfaList = filteredNfaList.stream().filter(nfa -> nfa.getNfaSubject().contains(subject)).collect(Collectors.toList());
         }
-
+        if (!startDate.isEmpty()) {
+            filteredNfaList = filteredNfaList.stream().filter(nfa -> nfa.getNfaSTime().compareTo(startDate) >= 0).collect(Collectors.toList());
+        }
+        if (!endDate.isEmpty()) {
+            filteredNfaList = filteredNfaList.stream().filter(nfa -> nfa.getNfaETime().compareTo(endDate) <= 0).collect(Collectors.toList());
+        }
         List<NfaInfoResponse> nfaInfoResponseList = changeNfaResponse(filteredNfaList);
+
         return nfaInfoResponseList;
     }
+
+//    public List<NfaInfoResponse> getFilteredNfa(String subject, String startDate, String endDate) {
+//        List<Nfa> filteredNfaList;
+//        if (!subject.isEmpty() && !startDate.isEmpty() && !endDate.isEmpty()) {
+//            filteredNfaList = nfaRepository.getAllFilteredNfa(subject, startDate, endDate);
+//        } else if (!subject.isEmpty() && startDate.isEmpty() && endDate.isEmpty()) {
+//            filteredNfaList = nfaRepository.getSubjectFilteredNfa(subject);
+//        } else {
+//            filteredNfaList = nfaRepository.getDateFilteredNfa(startDate, endDate);
+//        }
+//
+//        List<NfaInfoResponse> nfaInfoResponseList = changeNfaResponse(filteredNfaList);
+//        return nfaInfoResponseList;
+//    }
 
     public StatusResponse createNfa(CreateAndUpdateNfaRequest request) {
         Nfa nfa = new Nfa();

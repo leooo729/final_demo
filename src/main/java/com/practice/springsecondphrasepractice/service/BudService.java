@@ -21,7 +21,7 @@ public class BudService {
 
     public List<Bud> getBudByMethod(String startDate, String endDate, String year){
 
-        if (startDate != null || endDate != null) {
+        if (startDate != null && endDate != null) {
             return getFilteredWorkDayBud(startDate, endDate);
         }
         if (year != null) {
@@ -35,7 +35,7 @@ public class BudService {
         return allBudList;
     }
 
-    public Bud getTargetBud(String budYmd) throws DataNotFoundException {
+    public Bud getTargetBud(String budYmd){
         Bud targetBud = budRepository.findByBudYmd(budYmd);
         return targetBud;
     }

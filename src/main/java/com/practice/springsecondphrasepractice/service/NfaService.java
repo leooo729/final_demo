@@ -27,19 +27,9 @@ public class NfaService {
     }
 
     public List<NfaInfoResponse> getFilteredNfaList(String subject, String startDate, String endDate) {
-        List<Nfa> filteredNfaList = nfaRepository.getEnabledNfa();
-        if (!subject.isEmpty()) {
-            filteredNfaList = filteredNfaList.stream().filter(nfa -> nfa.getNfaSubject().contains(subject)).collect(Collectors.toList());
-        }
-        if (!startDate.isEmpty()) {
-            filteredNfaList = filteredNfaList.stream().filter(nfa -> nfa.getNfaSTime().compareTo(startDate) >= 0).collect(Collectors.toList());
-        }
-        if (!endDate.isEmpty()) {
-            filteredNfaList = filteredNfaList.stream().filter(nfa -> nfa.getNfaETime().compareTo(endDate) <= 0).collect(Collectors.toList());
-        }
-        List<NfaInfoResponse> nfaInfoResponseList = changeNfaResponse(filteredNfaList);
-
-        return nfaInfoResponseList;
+        List<Nfa> enabledNfaList = nfaRepository.getEnabledNfa();
+        List<NfaInfoResponse> filteredNfaList=filteredNfa(enabledNfaList,subject,startDate,endDate);
+        return filteredNfaList;
     }
     public StatusResponse createNfa(CreateAndUpdateNfaRequest request) {
         Nfa nfa = new Nfa();
@@ -88,5 +78,18 @@ public class NfaService {
         nfa.setNfaETime(request.getEndDate());
         nfa.setNfaUTime(LocalDateTime.now());
         return nfa;
+    }
+    private List<NfaInfoResponse> filteredNfa(List<Nfa> nfaList,String subject, String startDate, String endDate){
+        if (!subject.isEmpty()) {
+            nfaList = nfaList.stream().filter(nfa -> nfa.getNfaSubject().contains(subject)).collect(Collectors.toList());
+        }
+        if (!startDate.isEmpty()) {
+            nfaList = nfaList.stream().filter(nfa -> nfa.getNfaSTime().compareTo(startDate) >= 0).collect(Collectors.toList());
+        }
+        if (!endDate.isEmpty()) {
+            nfaList = nfaList.stream().filter(nfa -> nfa.getNfaETime().compareTo(endDate) <= 0).collect(Collectors.toList());
+        }
+        List<NfaInfoResponse> nfaInfoResponseList = changeNfaResponse(nfaList);
+        return nfaInfoResponseList;
     }
 }

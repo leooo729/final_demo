@@ -55,16 +55,7 @@ public class ProdService {
     }
 
     public StatusResponse createProd(CreateProdRequest request) {
-        Prod prod = new Prod();
-        prod.setProdId(request.getProdKind() + "_" + request.getProdCcy());
-        prod.setProdKind(request.getProdKind());
-        prod.setProdName(request.getProdName());
-        prod.setProdEname(request.getProdEname());
-        prod.setProdCcy(request.getProdCcy());
-        prod.setProdEnable(request.getProdEnable());
-        prod.setProdITime(LocalDateTime.now());
-        prod.setProdUTime(LocalDateTime.now());
-
+        Prod prod =setProdInfo(request);
         prodRepository.save(prod);
         return new StatusResponse("新增成功");
     }
@@ -115,6 +106,19 @@ public class ProdService {
         prodInfoResponse.setProdEnable(prod.getProdEnable());
 
         return prodInfoResponse;
+    }
+
+    private Prod setProdInfo(CreateProdRequest request){
+        Prod prod = new Prod();
+        prod.setProdId(request.getProdKind() + "_" + request.getProdCcy());
+        prod.setProdKind(request.getProdKind());
+        prod.setProdName(request.getProdName());
+        prod.setProdEname(request.getProdEname());
+        prod.setProdCcy(request.getProdCcy());
+        prod.setProdEnable(request.getProdEnable());
+        prod.setProdITime(LocalDateTime.now());
+        prod.setProdUTime(LocalDateTime.now());
+        return prod;
     }
 
 }

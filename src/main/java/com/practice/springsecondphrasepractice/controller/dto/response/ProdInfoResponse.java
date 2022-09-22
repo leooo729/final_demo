@@ -16,6 +16,8 @@ public class ProdInfoResponse {
     private String prodEname;
     private String prodCcy;
     private String prodEnable;
+
+
 }
 
 //public interface ProdInfoResponse {

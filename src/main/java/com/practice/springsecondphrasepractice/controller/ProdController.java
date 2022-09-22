@@ -10,10 +10,13 @@ import com.practice.springsecondphrasepractice.exception.ParamInvalidException;
 import com.practice.springsecondphrasepractice.model.ProdRepository;
 import com.practice.springsecondphrasepractice.service.ProdService;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +64,7 @@ public class ProdController {
 
     @PutMapping("/{prodId}")
     public StatusResponse updateProdById(@PathVariable @Pattern(regexp = "(EAT|USE)_[A-Z]{3}", message = "prodId 格式錯誤") String prodId, @RequestBody @Valid UpdateProdRequest updateProdRequest) throws ParamInvalidException {
-        checkProdIdExist(prodId);
+        checkChaneInfo(prodId);
         StatusResponse response = prodService.updateProdById(prodId, updateProdRequest);
         return response;
     }
@@ -69,7 +72,7 @@ public class ProdController {
 
     @PostMapping("/{prodId}")
     public StatusResponse deleteProdById(@PathVariable @Pattern(regexp = "(EAT|USE)_[A-Z]{3}", message = "prodId 格式錯誤") String prodId, @RequestBody @Valid DeleteProdRequest deleteProdRequest) throws ParamInvalidException {
-        checkProdIdExist(prodId);
+        checkChaneInfo(prodId);
         StatusResponse response = prodService.deleteProdById(prodId, deleteProdRequest);
         return response;
     }
@@ -87,7 +90,7 @@ private boolean checkGetProdByMethod(String kind, String ccy) throws ParamInvali
     }
     return true;
 }
-private boolean checkProdIdExist(String prodId) throws ParamInvalidException {
+private boolean checkChaneInfo(String prodId) throws ParamInvalidException {
     if (prodRepository.findByProdId(prodId) == null) {
         List<String> errMessageList = new ArrayList<>();
         errMessageList.add("資料不存在");

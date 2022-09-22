@@ -34,14 +34,14 @@ public class NfaService {
     public StatusResponse createNfa(CreateAndUpdateNfaRequest request) {
         Nfa nfa = new Nfa();
         nfa.setNfaUuid(DateTimeFormatter.ofPattern("yyyyMMddhhmmssSSS").format(LocalDateTime.now()));
-        nfa = nfaInfoSetter(nfa, request);
+        nfa = setNfaInfo(nfa, request);
         nfaRepository.save(nfa);
         return new StatusResponse("新增成功");
     }
 
     public StatusResponse updateNfa(String nfaUuid, CreateAndUpdateNfaRequest request) {
         Nfa nfa = nfaRepository.findByNfaUuid(nfaUuid);
-        nfa = nfaInfoSetter(nfa, request);
+        nfa = setNfaInfo(nfa, request);
         nfaRepository.save(nfa);
         return new StatusResponse("異動成功");
     }
@@ -70,7 +70,7 @@ public class NfaService {
         return nfaInfoResponseList;
     }
 
-    private Nfa nfaInfoSetter(Nfa nfa, CreateAndUpdateNfaRequest request) {
+    private Nfa setNfaInfo(Nfa nfa, CreateAndUpdateNfaRequest request) {
         nfa.setNfaSubject(request.getSubject());
         nfa.setNfaContent(request.getContent());
         nfa.setNfaEnable(request.getEnable());

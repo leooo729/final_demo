@@ -1,15 +1,34 @@
 package com.practice.springsecondphrasepractice.controller;
 
+import com.practice.springsecondphrasepractice.controller.dto.request.AesRequest;
+import com.practice.springsecondphrasepractice.controller.dto.response.AesResponse;
+import com.practice.springsecondphrasepractice.service.AesService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/prod")
+@RequestMapping("/api/v2")
 @RequiredArgsConstructor
-@Validated
 public class AesController {
-    //Cipher cipher = Cipher.getInstance( "AES/ECB/PKCS5Padding" );
+    private final AesService aesService;
 
+@PostMapping("/encode/aes/ecb")
+    public AesResponse ecbEncode(@Value("${key}") String key, @RequestBody AesRequest request) throws Exception {
+    return aesService.ecbEncode(request,key);
+}
+
+    @PostMapping("/decode/aes/ecb")
+    public AesResponse ecbDecode(@Value("${key}") String key, @RequestBody AesRequest request) throws Exception {
+        return aesService.ecbDecode(request,key);
+    }
+    @PostMapping("/encode/aes/cbc")
+    public AesResponse cbcEncode(@Value("${key}") String key, @RequestBody AesRequest request) throws Exception {
+        return aesService.cbcEncode(request,key);
+    }
+    @PostMapping("/decode/aes/cbc")
+    public AesResponse cbcDecode(@Value("${key}") String key, @RequestBody AesRequest request) throws Exception {
+        return aesService.cbcDecode(request,key);
+    }
 }

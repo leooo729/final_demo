@@ -31,15 +31,13 @@ public class BudController {
     @GetMapping
     public List<Bud> getBudByMethod(@RequestParam(required = false) @Pattern(regexp = "[0-9]{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])", message = "起始日期 格式錯誤") String startDate,
                                     @RequestParam(required = false) @Pattern(regexp = "[0-9]{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])", message = "結束日期 格式錯誤") String endDate,
-                                    @RequestParam(required = false) @Pattern(regexp = "\\d{4}", message = "年度 格式錯誤") String year) throws DataNotFoundException, ParamInvalidException {
-        if (startDate != null && endDate != null && startDate.compareTo(endDate) > 0) {
+                                    @RequestParam(required = false) @Pattern(regexp = "[0-9]{4}", message = "年度 格式錯誤") String year) throws DataNotFoundException, ParamInvalidException {
+        if (startDate!=null && endDate!=null && startDate.compareTo(endDate) > 0) {
             List<String> errMessageList = new ArrayList<>();
             errMessageList.add("起始日期 不能大於 結束日期");
             throw new ParamInvalidException(errMessageList);
         }
-
-        List<Bud> budList;
-        budList = budService.getBudByMethod(startDate, endDate, year);
+        List<Bud>budList = budService.getBudByMethod(startDate, endDate, year);
         if (budList.isEmpty()) {
             throw new DataNotFoundException("資料不存在");
         }
@@ -90,20 +88,3 @@ public class BudController {
         return response;
     }
 }
-
-
-//    @GetMapping
-//    private List<Bud> getAllBud() throws DataNotFoundException {
-//        List<Bud> allBudList = budService.getAllBud();
-//        return allBudList;
-//    }
-//    @GetMapping
-//    private List<Bud> getWorkDayBudByYear(@RequestParam String year){
-//        List<Bud> filteredBudList = budService.getWorkDayBudByYear(year);
-//        return filteredBudList;
-//    }
-//    @GetMapping
-//    private List<Bud> getFilteredWorkDayBud(@RequestParam String startDate,@RequestParam String endDate){
-//        List<Bud> filteredBudList = budService.getFilteredWorkDayBud(startDate,endDate);
-//        return filteredBudList;
-//    }

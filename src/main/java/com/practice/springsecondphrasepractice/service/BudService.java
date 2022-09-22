@@ -20,7 +20,6 @@ public class BudService {
     private final BudRepository budRepository;
 
     public List<Bud> getBudByMethod(String startDate, String endDate, String year){
-
         if (startDate != null && endDate != null) {
             return getFilteredWorkDayBud(startDate, endDate);
         }

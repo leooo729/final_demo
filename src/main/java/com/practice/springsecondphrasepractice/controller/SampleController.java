@@ -24,8 +24,6 @@ public class SampleController {
 private final BudService budService;
     @GetMapping("/{id}")
     public StatusResponse testDataNotFound(@PathVariable @NotBlank String id) throws DataNotFoundException {
-
-        List<Bud>a=budService.getAllBud();
        throw new DataNotFoundException("資料不存在");
     }
 
